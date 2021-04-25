@@ -78,13 +78,13 @@ The internal implementation uses a singly linked list.<br>
 
 		gl_push_front(l, 4);	// [4]
 		gl_push_back(l, 3); 	// [4, 3]
-		gl_push_back(l, 1);		// [4, 3, 1]
-		gl_push_back(l, 2);		// [4, 3, 1, 2]
+		gl_push_back(l, 1);	// [4, 3, 1]
+		gl_push_back(l, 2);	// [4, 3, 1, 2]
 		gl_push_front(l, 4);	// [4, 4, 3, 1, 2]
 		
-		gl_remove(l, 4);		// [3, 1, 2]
+		gl_remove(l, 4);	// [3, 1, 2]
 
-		gl_sort(l);				// [1, 2, 3]
+		gl_sort(l);		// [1, 2, 3]
 
 		iterator(int) it;
 		init_iterator(int, one, &it);
