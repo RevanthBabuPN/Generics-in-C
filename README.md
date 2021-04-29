@@ -14,7 +14,7 @@ The internal implementation uses a singly linked list.<br>
 </p>
 <br>
 
-> ### Methods
+### Methods
 
 <div style="margin-left:20px;">
 	<table>
@@ -65,33 +65,33 @@ The internal implementation uses a singly linked list.<br>
 </div>
 <br>
 
-> ### Usage
+### Usage
 ```c
-	#include <stdio.h>
-	#include "glist.h"
+#include <stdio.h>
+#include "glist.h"
 
-	glist(int) intlist;
+glist(int) intlist;
 
-	int main()
+int main()
+{
+	intlist l = gl_init(int); // []
+
+	gl_push_front(l, 4);	// [4]
+	gl_push_back(l, 3); 	// [4, 3]
+	gl_push_back(l, 1);	// [4, 3, 1]
+	gl_push_back(l, 2);	// [4, 3, 1, 2]
+	gl_push_front(l, 4);	// [4, 4, 3, 1, 2]
+	
+	gl_remove(l, 4);	// [3, 1, 2]
+
+	gl_sort(l);		// [1, 2, 3]
+
+	iterator(int) it;
+	init_iterator(int, one, &it);
+	
+	while(has_next_int(&it))
 	{
-		intlist l = gl_init(int); // []
-
-		gl_push_front(l, 4);	// [4]
-		gl_push_back(l, 3); 	// [4, 3]
-		gl_push_back(l, 1);	// [4, 3, 1]
-		gl_push_back(l, 2);	// [4, 3, 1, 2]
-		gl_push_front(l, 4);	// [4, 4, 3, 1, 2]
-		
-		gl_remove(l, 4);	// [3, 1, 2]
-
-		gl_sort(l);		// [1, 2, 3]
-
-		iterator(int) it;
-		init_iterator(int, one, &it);
-		
-		while(has_next_int(&it))
-		{
-			printf("%d ", next_int(&it));	// 1 2 3
-		}
+		printf("%d ", next_int(&it));	// 1 2 3
 	}
+}
 ```
