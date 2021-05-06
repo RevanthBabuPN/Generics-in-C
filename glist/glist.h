@@ -53,7 +53,7 @@
 		void (*pop_front)(gl_ ## T *l); \
 		size_t (*size)(gl_ ## T *l); \
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
-		void (*remove)(gl_ ## T *l, T val); \
+		size_t (*remove)(gl_ ## T *l, T val); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -75,7 +75,7 @@
 	static inline void g_list_ ## T ## _pop_front (gl_ ## T *l); \
 	static inline size_t g_list_ ## T ## _size (gl_ ## T *l); \
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
-	static inline void g_list_ ## T ## _remove (gl_ ## T *l, T val); \
+	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -233,13 +233,15 @@
 	} \
 	\
 	\
-	static inline void g_list_ ## T ## _remove(gl_##T* l, T val) { \
+	static inline size_t g_list_ ## T ## _remove(gl_##T* l, T val) { \
+		size_t count = 0; \
 		node_ ## T ## _t *temp = l -> head, *prev; \
 		while (temp != NULL && g_list_ ## T ## _cmp(temp->val, val)) \
 		{ \
 			l->head = temp->next; \
 			free(temp); \
 			l->size -= 1; \
+			++count; \
 			temp = l->head; \
 		} \
 		while (temp != NULL) \
@@ -250,14 +252,16 @@
 				temp = temp->next; \
 			} \
 			if (temp == NULL) \
-				return; \
+				return count; \
 			prev->next = temp->next; \
-			free(temp); \
 			l->size -= 1; \
+			++count; \
 			if (temp == l->tail) \
 				l->tail = prev; \
+			free(temp); \
 			temp = prev->next; \
 		} \
+		return count; \
 	} \
 	\
 	static inline size_t g_list_ ## T ## _size(gl_##T* l) { \
@@ -373,7 +377,7 @@
 		void (*pop_front)(gl_ ## T *l); \
 		size_t (*size)(gl_ ## T *l); \
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
-		void (*remove)(gl_ ## T *l, T val); \
+		size_t (*remove)(gl_ ## T *l, T val); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -395,7 +399,7 @@
 	static inline void g_list_ ## T ## _pop_front (gl_ ## T *l); \
 	static inline size_t g_list_ ## T ## _size (gl_ ## T *l); \
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
-	static inline void g_list_ ## T ## _remove (gl_ ## T *l, T val); \
+	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -553,13 +557,15 @@
 	} \
 	\
 	\
-	static inline void g_list_ ## T ## _remove(gl_##T* l, T val) { \
+	static inline size_t g_list_ ## T ## _remove(gl_##T* l, T val) { \
+		size_t count = 0; \
 		node_ ## T ## _t *temp = l -> head, *prev; \
 		while (temp != NULL && g_list_ ## T ## _cmp(temp->val, val)) \
 		{ \
 			l->head = temp->next; \
 			free(temp); \
 			l->size -= 1; \
+			++count; \
 			temp = l->head; \
 		} \
 		while (temp != NULL) \
@@ -570,14 +576,16 @@
 				temp = temp->next; \
 			} \
 			if (temp == NULL) \
-				return; \
+				return count; \
 			prev->next = temp->next; \
-			free(temp); \
 			l->size -= 1; \
+			++count; \
 			if (temp == l->tail) \
 				l->tail = prev; \
+			free(temp); \
 			temp = prev->next; \
 		} \
+		return count; \
 	} \
 	\
 	static inline size_t g_list_ ## T ## _size(gl_##T* l) { \
