@@ -44,7 +44,7 @@ int main()
 	iterator(date) it1;
 	init_iterator(date, l1, &it1);
 
-	printf("Before sorting:\n");
+	printf("Elements:\n");
 	while(has_next_date(&it1))
 	{
 		date temp = next_date(&it1);
@@ -52,7 +52,7 @@ int main()
 	}
 
 	gl_sort(l1, by_year);
-	printf("\n------------------------\nAfter sorting by year:\n");
+	printf("\n--------------------\nSorting by year:\n");
 
 	init_iterator(date, l1, &it1);
 	while(has_next_date(&it1))
@@ -62,7 +62,7 @@ int main()
 	}
 
 	gl_sort(l1, by_month);
-	printf("\n------------------------\nAfter sorting by month:\n");
+	printf("\n--------------------\nSorting by month:\n");
 
 	init_iterator(date, l1, &it1);
 	while(has_next_date(&it1))
@@ -73,7 +73,7 @@ int main()
 
 	date d = {11, 9, 2001};
 	gl_remove(l1, d);
-	printf("\n------------------------\nRemoved {11, 9, 2001}\n");
+	printf("\n--------------------\nRemoved {11, 9, 2001}\n");
 	
 	init_iterator(date, l1, &it1);
 	while(has_next_date(&it1))

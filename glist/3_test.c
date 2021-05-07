@@ -38,7 +38,7 @@ int main()
 	iterator(complex) it;
 	init_iterator(complex, l1, &it);
 
-	printf("Before sorting:\n");
+	printf("Elements:\n");
 	while(has_next(complex, &it))
 	{
 		complex temp = next(complex, &it);

@@ -20,9 +20,10 @@ int main()
 	printf("Intlist\n");
 	iterator(int) it1;
 	init_iterator(int, il, &it1);
-	while(has_next_int(&it1))
+	// while(has_next_int(&it1))
+	while(has_next(&it1))
 	{
-		printf("%d ", next_int(&it1));
+		printf("%d ", next(&it1));
 	}
 	iterator(int) *it2 = gl_find(il, 2);
 	if(has_next_int(it2))
@@ -32,6 +33,7 @@ int main()
 
 	printf("\n-------------------------------------------\n\n");
 	
+	#if 1
 	floatlist fl = gl_init(float);
     gl_push_back(fl, 1);	// [1.00]
     gl_push_back(fl, 2);	// [1.00, 2.00]
@@ -46,21 +48,24 @@ int main()
 	gl_push_back(fl, 5);	// [5.00, 2.00, 3.00, 4.00, 5.00]
 	gl_push_back(fl, 4.5);	// [5.00, 2.00, 3.00, 4.00, 5.00, 4.50]
 
+	
 	printf("FloatList\nBefore sorting:\n");
 	iterator(float) it3;
 	init_iterator(float, fl, &it3);
-	while(has_next(float, &it3))
+	// while(has_next_float(&it3))
+	while(has_next(&it3))
 	{
-		printf("%0.2f\t", next(float, &it3));
+		printf("%0.2f\t", next_float(&it3));
 	}
 	
 	gl_sort(fl);
 	
 	printf("\n\nAfter sorting:\n");
 	init_iterator(float, fl, &it3);
-	while(has_next(float, &it3))
+	while(has_next_float(&it3))
 	{
-		printf("%0.2f\t", next(float, &it3));
+		printf("%0.2f\t", next_float(&it3));
 	}
 	printf("\n\n");
+	#endif
 }
