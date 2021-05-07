@@ -17,17 +17,17 @@
 
 #define gl_sort(...) GET_MACRO(__VA_ARGS__, gl_sort2, gl_sort1)(__VA_ARGS__)
 
-#define gl_init(T) g_list_ ## T ## _fns.init();
-#define gl_clear(l) l->fns->clear(l)
-#define gl_push_back(l, val) l->fns->push_back(l, val)
-#define gl_pop_back(l) l->fns->pop_back(l)
-#define gl_push_front(l, val) l->fns->push_front(l, val)
-#define gl_pop_front(l) l->fns->pop_front(l)
-#define gl_size(l) l->fns->size(l)
-#define gl_find(l, val) l->fns->find(l, val)
-#define gl_remove(l, val) l->fns->remove(l, val)
-#define gl_sort1(l) l->fns->sort1(&l->head)
-#define gl_sort2(l, compare) l->fns->sort2(&l->head, compare)
+#define gl_init(T, l) g_list_ ## T ## _fns.init(l)
+#define gl_clear(l) (l)->fns->clear(l)
+#define gl_push_back(l, val) (l)->fns->push_back(l, val)
+#define gl_pop_back(l) (l)->fns->pop_back(l)
+#define gl_push_front(l, val) (l)->fns->push_front(l, val)
+#define gl_pop_front(l) (l)->fns->pop_front(l)
+#define gl_size(l) (l)->fns->size(l)
+#define gl_find(l, val) (l)->fns->find(l, val)
+#define gl_remove(l, val) (l)->fns->remove(l, val)
+#define gl_sort1(l) (l)->fns->sort1(&(l)->head)
+#define gl_sort2(l, compare) (l)->fns->sort2(&(l)->head, compare)
 
 #define glist1(T) \
 	struct g_list_ ## T; \
@@ -54,7 +54,7 @@
 	}; \
 	\
 	struct g_list_ ## T ## _fns_t { \
-		gl_## T* (*init)(); \
+		void (*init)(gl_ ## T *l); \
 		void (*clear)(gl_ ## T *l); \
 		void (*push_back)(gl_ ## T *l, T val); \
 		void (*pop_back)(gl_ ## T *l); \
@@ -76,7 +76,7 @@
 	}; \
 	\
 	\
-	static inline gl_ ## T* g_list_ ## T ## _init (); \
+	static inline void g_list_ ## T ## _init (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _clear (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _push_back (gl_ ## T *l, T val); \
 	static inline void g_list_ ## T ## _pop_back (gl_ ## T *l); \
@@ -130,10 +130,14 @@
 		return key; \
 	} \
 	\
-	static inline gl_##T* g_list_ ## T ## _init () { \
-		gl_##T * l = calloc(1, sizeof(struct g_list_ ## T)); \
+	static inline void g_list_ ## T ## _init (gl_ ## T *l) { \
+		/*gl_##T * l = calloc(1, sizeof(struct g_list_ ## T));*/ \
 		l->fns = &g_list_ ## T ## _fns; \
-		return l; \
+		l->head = NULL;\
+		l->tail = NULL;\
+		l->end = NULL;\
+		l->size = 0; \
+		/*return l; */\
 	} \
 	\
 	static inline void g_list_ ## T ## _clear (gl_##T* l) { \
@@ -363,7 +367,9 @@
 		g_list_ ## T ## _sort2 (&b, compare); \
 		*l = SortedMerge_ ## T ## _2(a, b, compare); \
 	} \
-	typedef struct g_list_ ## T* \
+	typedef struct g_list_ ## T \
+
+
 
 #define glist2(T, compare) \
 	struct g_list_ ## T; \
@@ -390,7 +396,7 @@
 	}; \
 	\
 	struct g_list_ ## T ## _fns_t { \
-		gl_## T* (*init)(); \
+		void (*init)(gl_ ## T *l); \
 		void (*clear)(gl_ ## T *l); \
 		void (*push_back)(gl_ ## T *l, T val); \
 		void (*pop_back)(gl_ ## T *l); \
@@ -412,7 +418,7 @@
 	}; \
 	\
 	\
-	static inline gl_ ## T* g_list_ ## T ## _init (); \
+	static inline void g_list_ ## T ## _init (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _clear (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _push_back (gl_ ## T *l, T val); \
 	static inline void g_list_ ## T ## _pop_back (gl_ ## T *l); \
@@ -466,10 +472,14 @@
 		return key; \
 	} \
 	\
-	static inline gl_##T* g_list_ ## T ## _init () { \
-		gl_##T * l = calloc(1, sizeof(struct g_list_ ## T)); \
+	static inline void g_list_ ## T ## _init (gl_ ## T *l) { \
+		/*gl_##T * l = calloc(1, sizeof(struct g_list_ ## T));*/ \
 		l->fns = &g_list_ ## T ## _fns; \
-		return l; \
+		l->head = NULL;\
+		l->tail = NULL;\
+		l->end = NULL;\
+		l->size = 0; \
+		/*return l; */\
 	} \
 	\
 	static inline void g_list_ ## T ## _clear (gl_##T* l) { \
@@ -674,6 +684,6 @@
 		g_list_ ## T ## _sort2 (&b, compare); \
 		*l = SortedMerge_ ## T ## _2(a, b, compare); \
 	} \
-	typedef struct g_list_ ## T* \
+	typedef struct g_list_ ## T \
 
 #endif
