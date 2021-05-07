@@ -6,8 +6,11 @@
 /*wrappers for iterator functions*/
 #define iterator(T) iterator_ ## T ## _t
 #define init_iterator(T, lis, itr) init_iterator_ ## T (lis, itr)
-#define has_next(T, itr) has_next_ ## T (itr)
-#define next(T, itr) next_ ## T (itr)
+// #define has_next(T, itr) has_next_ ## T (itr)
+// #define next(T, itr) next_ ## T (itr)
+
+#define has_next(itr) (itr)->fns->has_next(itr)
+#define next(itr) (itr)->fns->next(itr)
 
 #define GET_MACRO(_1,_2,NAME,...) NAME
 #define glist(...) GET_MACRO(__VA_ARGS__, glist2, glist1)(__VA_ARGS__)
@@ -39,9 +42,15 @@
 		node_ ## T ## _t * next; \
 	}; \
 	\
+	struct iterator_ ## T ## _fns_t { \
+		int (*has_next)(const iterator_ ## T ## _t *ptr_iterator); \
+		T (*next)(iterator_ ## T ## _t *ptr_iterator); \
+	}; \
+	\
 	struct iterator_ ## T \
 	{ \
 		node_ ## T ## _t* current; \
+		struct iterator_ ## T ## _fns_t * fns;\
 	}; \
 	\
 	struct g_list_ ## T ## _fns_t { \
@@ -98,9 +107,15 @@
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator); \
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator); \
 	\
+	struct iterator_ ## T ## _fns_t  iterator_ ## T ## _fns = { \
+		.has_next		= has_next_ ## T,	\
+		.next			= next_ ## T	\
+	}; \
+	\
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator) \
 	{ \
 		ptr_iterator->current = ptr_list->head; \
+		ptr_iterator->fns = &iterator_ ## T ## _fns;\
 	} \
 	\
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator) \
@@ -363,9 +378,15 @@
 		node_ ## T ## _t * next; \
 	}; \
 	\
+	struct iterator_ ## T ## _fns_t { \
+		int (*has_next)(const iterator_ ## T ## _t *ptr_iterator); \
+		T (*next)(iterator_ ## T ## _t *ptr_iterator); \
+	}; \
+	\
 	struct iterator_ ## T \
 	{ \
 		node_ ## T ## _t* current; \
+		struct iterator_ ## T ## _fns_t * fns;\
 	}; \
 	\
 	struct g_list_ ## T ## _fns_t { \
@@ -422,9 +443,15 @@
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator); \
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator); \
 	\
+	struct iterator_ ## T ## _fns_t  iterator_ ## T ## _fns = { \
+		.has_next		= has_next_ ## T,	\
+		.next			= next_ ## T	\
+	}; \
+	\
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator) \
 	{ \
 		ptr_iterator->current = ptr_list->head; \
+		ptr_iterator->fns = &iterator_ ## T ## _fns;\
 	} \
 	\
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator) \
