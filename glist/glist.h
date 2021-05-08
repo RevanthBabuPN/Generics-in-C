@@ -64,6 +64,7 @@
 		size_t (*size)(gl_ ## T *l); \
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
 		size_t (*remove)(gl_ ## T *l, T val); \
+		size_t (*unique)(gl_ ## T *l); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -86,6 +87,7 @@
 	static inline size_t g_list_ ## T ## _size (gl_ ## T *l); \
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
+	static inline size_t g_list_ ## T ## _unique(gl_ ## T* l); \
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -99,8 +101,9 @@
 		.size		= g_list_ ## T ## _size,	\
 		.find		= g_list_ ## T ## _find,	\
 		.remove		= g_list_ ## T ## _remove,	\
-		.sort1		= g_list_ ## T ## _sort1, \
-		.sort2		= g_list_ ## T ## _sort2 \
+		.unique		= g_list_ ## T ## _unique,	\
+		.sort1		= g_list_ ## T ## _sort1,	\
+		.sort2		= g_list_ ## T ## _sort2	\
 	}; \
 	\
 	\
@@ -149,9 +152,10 @@
 			elem -> next = NULL; \
 			free(elem);\
 			elem = next;\
+			--l->size; \
 		}\
 		\
-		free(l); \
+		/*free(l); */\
 		l->head = NULL;\
 	} \
 	static inline int g_list_ ## T ## _cmp (T a, T b) { \
@@ -288,6 +292,33 @@
 		return l->size; \
 	} \
 	\
+	static inline size_t g_list_ ## T ## _unique(gl_ ## T* l){ \
+        node_ ## T ## _t* ptr1 = l->head; \
+        node_ ## T ## _t* ptr2; \
+        node_ ## T ## _t* duplicate; \
+        while(ptr1 != l->end && ptr1->next != l->end) \
+		{ \
+            ptr2 = ptr1; \
+            while(ptr2->next != l->end) \
+			{ \
+                if(g_list_ ## T ## _cmp(ptr1->val, ptr2->next->val)) \
+				{ \
+                    duplicate = ptr2->next; \
+                    ptr2->next = ptr2->next->next; \
+                    free(duplicate); \
+                    l->size -= 1; \
+                } \
+                else \
+				{ \
+                    ptr2 = ptr2->next; \
+                } \
+            } \
+            ptr1 = ptr1->next; \
+        \
+        } \
+        return l->size; \
+    }\
+	\
 	static void FrontBackSplit_ ## T(node_ ## T ## _t* source, node_ ## T ## _t** frontRef, node_ ## T ## _t** backRef) \
 	{ \
 		node_ ## T ## _t* fast; \
@@ -371,7 +402,6 @@
 	typedef struct g_list_ ## T \
 
 
-
 #define glist2(T, compare) \
 	struct g_list_ ## T; \
 	struct node_ ## T; \
@@ -406,6 +436,7 @@
 		size_t (*size)(gl_ ## T *l); \
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
 		size_t (*remove)(gl_ ## T *l, T val); \
+		size_t (*unique)(gl_ ## T *l); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -428,6 +459,7 @@
 	static inline size_t g_list_ ## T ## _size (gl_ ## T *l); \
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
+	static inline size_t g_list_ ## T ## _unique (gl_ ## T *l);\
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -441,6 +473,7 @@
 		.size		= g_list_ ## T ## _size,	\
 		.find		= g_list_ ## T ## _find,	\
 		.remove		= g_list_ ## T ## _remove,	\
+		.unique		= g_list_ ## T ## _unique,	\
 		.sort1		= g_list_ ## T ## _sort1, \
 		.sort2		= g_list_ ## T ## _sort2 \
 	}; \
@@ -594,7 +627,6 @@
 		/*return -1;*/ \
 	} \
 	\
-	\
 	static inline size_t g_list_ ## T ## _remove(gl_##T* l, T val) { \
 		size_t count = 0; \
 		node_ ## T ## _t *temp = l -> head, *prev; \
@@ -626,9 +658,37 @@
 		return count; \
 	} \
 	\
+	\
 	static inline size_t g_list_ ## T ## _size(gl_##T* l) { \
 		return l->size; \
 	} \
+	\
+	static inline size_t g_list_ ## T ## _unique(gl_ ## T* l){ \
+        node_ ## T ## _t* ptr1 = l->head; \
+        node_ ## T ## _t* ptr2; \
+        node_ ## T ## _t* duplicate; \
+        while(ptr1 != l->end && ptr1->next != l->end) \
+		{ \
+            ptr2 = ptr1; \
+            while(ptr2->next != l->end) \
+			{ \
+                if(g_list_ ## T ## _cmp(ptr1->val, ptr2->next->val)) \
+				{ \
+                    duplicate = ptr2->next; \
+                    ptr2->next = ptr2->next->next; \
+                    free(duplicate); \
+                    l->size -= 1; \
+                } \
+                else \
+				{ \
+                    ptr2 = ptr2->next; \
+                } \
+            } \
+            ptr1 = ptr1->next; \
+        \
+        } \
+        return l->size; \
+    }\
 	\
 	static void FrontBackSplit_ ## T(node_ ## T ## _t* source, node_ ## T ## _t** frontRef, node_ ## T ## _t** backRef) \
 	{ \
