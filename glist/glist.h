@@ -153,9 +153,7 @@
 			free(elem);\
 			elem = next;\
 			--l->size; \
-		}\
-		\
-		free(l); \
+		} \
 		l->head = NULL;\
 	} \
 	static inline int g_list_ ## T ## _cmp (T a, T b) { \
@@ -337,8 +335,7 @@
 		slow->next = NULL; \
 	} \
 	\
-	static node_ ## T ## _t* SortedMerge_ ## T ## _1(node_ ## T ## _t*  a, node_ ## T ## _t*  b) \
-	{ \
+	static node_ ## T ## _t* SortedMerge_ ## T ## _1(node_ ## T ## _t*  a, node_ ## T ## _t*  b){ \
 		node_ ## T ## _t* result = NULL; \
 		if (a == NULL) \
 			return (b); \
@@ -355,8 +352,7 @@
 		return (result); \
 	} \
 	\
-	static void g_list_ ## T ## _sort1 (node_ ## T ## _t** l) \
-	{ \
+	static void g_list_ ## T ## _sort1 (node_ ## T ## _t** l){ \
 		node_ ## T ## _t* head = *l; \
 		node_ ## T ## _t* a; \
 		node_ ## T ## _t* b; \
@@ -368,8 +364,8 @@
 		g_list_ ## T ## _sort1 (&b); \
 		*l = SortedMerge_ ## T ## _1(a, b); \
 	} \
-	static node_ ## T ## _t* SortedMerge_ ## T ## _2(node_ ## T ## _t*  a, node_ ## T ## _t*  b, int (*compare)(T a, T b)) \
-	{ \
+	\
+	static node_ ## T ## _t* SortedMerge_ ## T ## _2(node_ ## T ## _t*  a, node_ ## T ## _t*  b, int (*compare)(T a, T b)){ \
 		node_ ## T ## _t* result = NULL; \
 		if (a == NULL) \
 			return (b); \
@@ -386,8 +382,7 @@
 		return (result); \
 	} \
 	\
-	static void g_list_ ## T ## _sort2 (node_ ## T ## _t** l, int (*compare)(T a, T b)) \
-	{ \
+	static void g_list_ ## T ## _sort2 (node_ ## T ## _t** l, int (*compare)(T a, T b)){ \
 		node_ ## T ## _t* head = *l; \
 		node_ ## T ## _t* a; \
 		node_ ## T ## _t* b; \
@@ -524,11 +519,11 @@
 			elem -> next = NULL; \
 			free(elem);\
 			elem = next;\
+			--l->size; \
 		}\
-		\
-		free(l); \
 		l->head = NULL;\
 	} \
+	\
 	static inline int g_list_ ## T ## _cmp (T a, T b) { \
 		return compare(a, b);\
 	} \
@@ -690,8 +685,7 @@
         return l->size; \
     }\
 	\
-	static void FrontBackSplit_ ## T(node_ ## T ## _t* source, node_ ## T ## _t** frontRef, node_ ## T ## _t** backRef) \
-	{ \
+	static void FrontBackSplit_ ## T(node_ ## T ## _t* source, node_ ## T ## _t** frontRef, node_ ## T ## _t** backRef){ \
 		node_ ## T ## _t* fast; \
 		node_ ## T ## _t* slow; \
 		slow = source; \
@@ -708,8 +702,7 @@
 		slow->next = NULL; \
 	} \
 	\
-	static node_ ## T ## _t* SortedMerge_ ## T ## _2(node_ ## T ## _t*  a, node_ ## T ## _t*  b, int (*compare)(T a, T b)) \
-	{ \
+	static node_ ## T ## _t* SortedMerge_ ## T ## _2(node_ ## T ## _t*  a, node_ ## T ## _t*  b, int (*compare)(T a, T b)){ \
 		node_ ## T ## _t* result = NULL; \
 		if (a == NULL) \
 			return (b); \
@@ -726,14 +719,12 @@
 		return (result); \
 	} \
 	\
-	static void g_list_ ## T ## _sort1 (node_ ## T ## _t** l) \
-	{ \
+	static void g_list_ ## T ## _sort1 (node_ ## T ## _t** l){ \
 		printf("Too few arguments for 'gl_sort'\ngl_sort(l);\n"); \
 		exit(1); \
 	} \
 	\
-	static void g_list_ ## T ## _sort2 (node_ ## T ## _t** l, int (*compare)(T a, T b)) \
-	{ \
+	static void g_list_ ## T ## _sort2 (node_ ## T ## _t** l, int (*compare)(T a, T b)){ \
 		node_ ## T ## _t* head = *l; \
 		node_ ## T ## _t* a; \
 		node_ ## T ## _t* b; \
