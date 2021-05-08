@@ -23,6 +23,7 @@ int by_month(date d1, date d2)
 	return d1.mm < d2.mm;
 }
 
+// defines the linked list structures and functions for date, uses date_equal for ==
 glist(date, date_equal) datelist;
 
 int main()
@@ -42,10 +43,10 @@ int main()
     gl_push_front(&l1, d4);
     gl_push_front(&l1, d5);
 
-	iterator(date) it1;
-	init_iterator(date, &l1, &it1);
+	gl_iterator(date) it1;
+	gl_init_iterator(date, &l1, &it1);
 
-	printf("Elements:\n");
+	printf("Elements:\n----------\n");
 	while(has_next_date(&it1))
 	{
 		date temp = next_date(&it1);
@@ -53,9 +54,9 @@ int main()
 	}
 
 	gl_sort(&l1, by_year);
-	printf("\n--------------------\nSorting by year:\n");
+	printf("\nSorting by year:\n----------------\n");
 
-	init_iterator(date, &l1, &it1);
+	gl_init_iterator(date, &l1, &it1);
 	while(has_next_date(&it1))
 	{
 		date temp = next_date(&it1);
@@ -63,9 +64,9 @@ int main()
 	}
 
 	gl_sort(&l1, by_month);
-	printf("\n--------------------\nSorting by month:\n");
+	printf("\nSorting by month:\n------------------\n");
 
-	init_iterator(date, &l1, &it1);
+	gl_init_iterator(date, &l1, &it1);
 	while(has_next_date(&it1))
 	{
 		date temp = next_date(&it1);
@@ -74,9 +75,9 @@ int main()
 
 	date d = {11, 9, 2001};
 	gl_remove(&l1, d);
-	printf("\n--------------------\nRemoved {11, 9, 2001}\n");
+	printf("\nRemoved {11, 9, 2001}\n----------------------\n");
 	
-	init_iterator(date, &l1, &it1);
+	gl_init_iterator(date, &l1, &it1);
 	while(has_next_date(&it1))
 	{
 		date temp = next_date(&it1);

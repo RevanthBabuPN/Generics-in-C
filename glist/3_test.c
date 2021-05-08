@@ -17,12 +17,13 @@ int by_rp(complex c1, complex c2)
 	return c1.rp < c2.rp;
 }
 
-glist(complex, complex_equal) complexlist;
+// defines the linked list structures and functions for complex, uses complex_equal for ==
+glist(complex, complex_equal) complexlist;	
 
 int main()
 {
-	complexlist l1;
-	gl_init(complex, &l1);
+	complexlist clist;
+	gl_init(complex, &clist);
 
 	complex c1 = {11, 9};
 	complex c2 = {2, 4};
@@ -30,33 +31,40 @@ int main()
 	complex c4 = {30, 1};
 	complex c5 = {26, 12};
 
-	gl_push_back(&l1, c1);
-    gl_push_back(&l1, c2);
-    gl_push_back(&l1, c3);
-    gl_push_front(&l1, c4);
-    gl_push_front(&l1, c5);
+	gl_push_back(&clist, c1);
+    gl_push_back(&clist, c2);
+    gl_push_back(&clist, c3);
+    gl_push_front(&clist, c4);
+    gl_push_front(&clist, c5);
+	gl_push_front(&clist, c4);
 
-	iterator(complex) it;
-	init_iterator(complex, &l1, &it);
+	gl_iterator(complex) it;
+	gl_init_iterator(complex, &clist, &it);
 
-	printf("Elements:\n");
-	// while(has_next(complex, &it))
+	printf("Elements:\n----------\n");
 	while(has_next(&it))
 	{
-		// complex temp = next(complex, &it);
 		complex temp = next(&it);
 		printf("%d : %d\n", temp.rp, temp.ip);
 	}
 
-	gl_sort(&l1, by_rp);
-	printf("\n------------------------\nAfter sorting by rp:\n");
-	iterator(complex) it3;
-	init_iterator(complex, &l1, &it3);
-	// while(has_next(complex, &it3))
-	while(has_next(&it3))
+	gl_unique(&clist);
+	printf("\nAfter removing duplicates using gl_unique:\n-------------------------------------------\n");
+	
+	gl_init_iterator(complex, &clist, &it);
+	while(has_next(&it))
 	{
-		// complex temp = next(complex, &it3);
-		complex temp = next(&it3);
+		complex temp = next(&it);
+		printf("%d : %d\n", temp.rp, temp.ip);
+	}
+
+	gl_sort(&clist, by_rp);
+	printf("\nAfter sorting by rp:\n--------------------\n");
+
+	gl_init_iterator(complex, &clist, &it);
+	while(has_next(&it))
+	{
+		complex temp = next(&it);
 		printf("%d : %d\n", temp.rp, temp.ip);
 	}
 }
