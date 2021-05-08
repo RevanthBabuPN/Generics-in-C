@@ -155,7 +155,7 @@
 			--l->size; \
 		}\
 		\
-		/*free(l); */\
+		free(l); \
 		l->head = NULL;\
 	} \
 	static inline int g_list_ ## T ## _cmp (T a, T b) { \
