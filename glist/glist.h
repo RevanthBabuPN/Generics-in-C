@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 /*wrappers for iterator functions*/
-#define iterator(T) iterator_ ## T ## _t
-#define init_iterator(T, lis, itr) init_iterator_ ## T (lis, itr)
+#define gl_iterator(T) iterator_ ## T ## _t
+#define gl_init_iterator(T, lis, itr) init_iterator_ ## T (lis, itr)
 // #define has_next(T, itr) has_next_ ## T (itr)
 // #define next(T, itr) next_ ## T (itr)
 
@@ -26,6 +26,7 @@
 #define gl_size(l) (l)->fns->size(l)
 #define gl_find(l, val) (l)->fns->find(l, val)
 #define gl_remove(l, val) (l)->fns->remove(l, val)
+#define gl_unique(l) (l)->fns->unique(l)
 #define gl_sort1(l) (l)->fns->sort1(&(l)->head)
 #define gl_sort2(l, compare) (l)->fns->sort2(&(l)->head, compare)
 
