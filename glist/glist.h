@@ -11,6 +11,7 @@
 
 #define has_next(itr) (itr)->fns->has_next(itr)
 #define next(itr) (itr)->fns->next(itr)
+#define get_val(itr) (itr)->fns->get_val(itr)
 
 #define GET_MACRO(_1,_2,NAME,...) NAME
 #define glist(...) GET_MACRO(__VA_ARGS__, glist2, glist1)(__VA_ARGS__)
@@ -46,6 +47,7 @@
 	struct iterator_ ## T ## _fns_t { \
 		int (*has_next)(const iterator_ ## T ## _t *ptr_iterator); \
 		T (*next)(iterator_ ## T ## _t *ptr_iterator); \
+		T (*get_val)(iterator_ ## T ## _t *ptr_iterator); \
 	}; \
 	\
 	struct iterator_ ## T \
@@ -110,10 +112,12 @@
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator); \
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator); \
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator); \
+	static T get_val_ ## T (iterator_ ## T ## _t *ptr_iterator); \
 	\
 	struct iterator_ ## T ## _fns_t  iterator_ ## T ## _fns = { \
 		.has_next		= has_next_ ## T,	\
-		.next			= next_ ## T	\
+		.next			= next_ ## T,	\
+		.get_val		= get_val_ ## T	\
 	}; \
 	\
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator) \
@@ -131,6 +135,13 @@
 	{ \
 		T key = ptr_iterator->current->val; \
 		ptr_iterator->current = ptr_iterator->current->next; \
+		return key; \
+	} \
+	\
+	static T get_val_ ## T (iterator_ ## T ## _t *ptr_iterator) \
+	{ \
+		T key = ptr_iterator->current->val; \
+		/*ptr_iterator->current = ptr_iterator->current->next; */\
 		return key; \
 	} \
 	\
@@ -239,6 +250,8 @@
 		/*size_t idx = 0;*/ \
 		\
 		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = 0; \
+		it->fns = &iterator_ ## T ## _fns;\
 		while (elem != l->end) { \
 			if (g_list_ ## T ## _cmp(elem->val, val)) { \
 				it -> current = elem; \
@@ -413,6 +426,7 @@
 	struct iterator_ ## T ## _fns_t { \
 		int (*has_next)(const iterator_ ## T ## _t *ptr_iterator); \
 		T (*next)(iterator_ ## T ## _t *ptr_iterator); \
+		T (*get_val)(iterator_ ## T ## _t *ptr_iterator); \
 	}; \
 	\
 	struct iterator_ ## T \
@@ -477,10 +491,12 @@
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator); \
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator); \
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator); \
+	static T get_val_ ## T (iterator_ ## T ## _t *ptr_iterator); \
 	\
 	struct iterator_ ## T ## _fns_t  iterator_ ## T ## _fns = { \
 		.has_next		= has_next_ ## T,	\
-		.next			= next_ ## T	\
+		.next			= next_ ## T,	\
+		.get_val		= get_val_ ## T	\
 	}; \
 	\
 	static void init_iterator_ ## T (gl_ ## T *ptr_list, iterator_ ## T ## _t *ptr_iterator) \
@@ -492,6 +508,13 @@
 	static int has_next_ ## T (const iterator_ ## T ## _t *ptr_iterator) \
 	{ \
 		return ptr_iterator->current != 0; \
+	} \
+	\
+	static T get_val_ ## T (iterator_ ## T ## _t *ptr_iterator) \
+	{ \
+		T key = ptr_iterator->current->val; \
+		/*ptr_iterator->current = ptr_iterator->current->next; */\
+		return key; \
 	} \
 	\
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator) \
@@ -607,6 +630,8 @@
 		/*size_t idx = 0;*/ \
 		\
 		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = 0; \
+		it->fns = &iterator_ ## T ## _fns;\
 		while (elem != l->end) { \
 			if (g_list_ ## T ## _cmp(elem->val, val)) { \
 				it -> current = elem; \

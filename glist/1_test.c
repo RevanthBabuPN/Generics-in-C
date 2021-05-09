@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include "glist.h"
 
+#define gfind(itr, key)														\
+{																					\
+	while(has_next(itr) && get_val(itr) != key)			\
+	{																				\
+		next(itr);															\
+	}																				\
+}
+
 glist(int) intlist;		// defines the linked list structures and functions for int
 glist(float) floatlist;	// defines the linked list structures and functions for float
 
@@ -29,14 +37,19 @@ int main()
 			printf("%d ", next(&it));
 		}
 
-		gl_iterator(int) *it2 = gl_find(il, 2);
+		gl_iterator(int) *it2 = gl_find(il, 4);
 		if(has_next_int(it2))
 			printf("\n%d: Found\n", next_int(it2));
 		else
 			printf("\n2: Not found\n");
+		
+		// gl_sort(il);
+		gfind(it2, 2);
+		if(has_next_int(it2))
+			printf("\n%d: Found", get_val(it2));
 	}
 	printf("\n---------------------------------------------\n");
-	#if 1
+	#if 0
 	{
 		printf("Floatlist\n----------\n");
 		floatlist fl;	// creating an object of floatlist.
