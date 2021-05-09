@@ -6,6 +6,7 @@
 /*wrappers for iterator functions*/
 #define gl_iterator(T) iterator_ ## T ## _t
 #define gl_init_iterator(T, lis, itr) init_iterator_ ## T (lis, itr)
+#define gl_iterator_eq(it1, it2) (it1->current == it2->current)
 // #define has_next(T, itr) has_next_ ## T (itr)
 // #define next(T, itr) next_ ## T (itr)
 
@@ -28,6 +29,8 @@
 #define gl_find(l, val) (l)->fns->find(l, val)
 #define gl_remove(l, val) (l)->fns->remove(l, val)
 #define gl_unique(l) (l)->fns->unique(l)
+#define gl_begin(l) (l)->fns->begin(l)
+#define gl_end(l) (l)->fns->end(l)
 #define gl_sort1(l) (l)->fns->sort1(&(l)->head)
 #define gl_sort2(l, compare) (l)->fns->sort2(&(l)->head, compare)
 
@@ -67,6 +70,8 @@
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
 		size_t (*remove)(gl_ ## T *l, T val); \
 		size_t (*unique)(gl_ ## T *l); \
+		iterator_ ## T ## _t* (*begin)(gl_ ## T *l); \
+		iterator_ ## T ## _t* (*end)(gl_ ## T *l); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -90,6 +95,8 @@
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _unique(gl_ ## T* l); \
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _begin (gl_ ## T *l); \
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _end (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -104,6 +111,8 @@
 		.find		= g_list_ ## T ## _find,	\
 		.remove		= g_list_ ## T ## _remove,	\
 		.unique		= g_list_ ## T ## _unique,	\
+		.begin		= g_list_ ## T ## _begin,	\
+		.end		= g_list_ ## T ## _end,	\
 		.sort1		= g_list_ ## T ## _sort1,	\
 		.sort2		= g_list_ ## T ## _sort2	\
 	}; \
@@ -143,6 +152,22 @@
 		T key = ptr_iterator->current->val; \
 		/*ptr_iterator->current = ptr_iterator->current->next; */\
 		return key; \
+	} \
+	\
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _begin (gl_ ## T *l)\
+	{ \
+		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = l->head; \
+		it->fns = &iterator_ ## T ## _fns; \
+		return it; \
+	} \
+	\
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _end (gl_ ## T *l)\
+	{ \
+		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = 0; \
+		it->fns = &iterator_ ## T ## _fns; \
+		return it; \
 	} \
 	\
 	static inline void g_list_ ## T ## _init (gl_ ## T *l) { \
@@ -446,6 +471,8 @@
 		iterator_ ## T ## _t* (*find)(gl_ ## T *l, T val); \
 		size_t (*remove)(gl_ ## T *l, T val); \
 		size_t (*unique)(gl_ ## T *l); \
+		iterator_ ## T ## _t* (*begin)(gl_ ## T *l); \
+		iterator_ ## T ## _t* (*end)(gl_ ## T *l); \
 		void (*sort1)(node_ ## T ## _t**);\
 		void (*sort2)(node_ ## T ## _t** l, int (*compare)(T a, T b));\
 	}; \
@@ -469,6 +496,8 @@
 	static inline iterator_ ## T ## _t* g_list_ ## T ## _find (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _remove (gl_ ## T *l, T val); \
 	static inline size_t g_list_ ## T ## _unique (gl_ ## T *l);\
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _begin (gl_ ## T *l); \
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _end (gl_ ## T *l); \
 	static inline void g_list_ ## T ## _sort1 (node_ ## T ## _t** l); \
 	static inline void g_list_ ## T ## _sort2 (node_ ## T ## _t** l,  int (*compare)(T a, T b)); \
 	\
@@ -483,6 +512,8 @@
 		.find		= g_list_ ## T ## _find,	\
 		.remove		= g_list_ ## T ## _remove,	\
 		.unique		= g_list_ ## T ## _unique,	\
+		.begin		= g_list_ ## T ## _begin,	\
+		.end		= g_list_ ## T ## _end,	\
 		.sort1		= g_list_ ## T ## _sort1, \
 		.sort2		= g_list_ ## T ## _sort2 \
 	}; \
@@ -515,6 +546,22 @@
 		T key = ptr_iterator->current->val; \
 		/*ptr_iterator->current = ptr_iterator->current->next; */\
 		return key; \
+	} \
+	\
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _begin (gl_ ## T *l)\
+	{ \
+		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = l->head; \
+		it->fns = &iterator_ ## T ## _fns; \
+		return it; \
+	} \
+	\
+	static inline iterator_ ## T ## _t* g_list_ ## T ## _end (gl_ ## T *l)\
+	{ \
+		iterator_ ## T ## _t *it = calloc(1,sizeof(iterator_ ## T ## _t)); \
+		it->current = 0; \
+		it->fns = &iterator_ ## T ## _fns; \
+		return it; \
 	} \
 	\
 	static T next_ ## T (iterator_ ## T ## _t *ptr_iterator) \

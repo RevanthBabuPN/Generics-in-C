@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "glist.h"
 
-#define gfind(itr, key)														\
-{																					\
-	while(has_next(itr) && get_val(itr) != key)			\
-	{																				\
-		next(itr);															\
-	}																				\
-}
+#define myfind(first, last, key)\
+{ \
+	while(!gl_iterator_eq(first, last) && (get_val(first) != key)) \
+	{ \
+		next(first); \
+	} \
+} 
 
 glist(int) intlist;		// defines the linked list structures and functions for int
 glist(float) floatlist;	// defines the linked list structures and functions for float
@@ -42,14 +42,19 @@ int main()
 			printf("\n%d: Found\n", next_int(it2));
 		else
 			printf("\n2: Not found\n");
-		
-		// gl_sort(il);
-		gfind(it2, 2);
-		if(has_next_int(it2))
-			printf("\n%d: Found", get_val(it2));
+
+		gl_iterator(int) *beg = gl_begin(il);
+		gl_iterator(int) *end = gl_end(il);
+
+		myfind(beg, end, 20);
+		if(!gl_iterator_eq(beg, end))
+			printf("\n%d: Found", get_val(beg));
+		else
+			printf("Not Found");
 	}
+
 	printf("\n---------------------------------------------\n");
-	#if 0
+	#if 1
 	{
 		printf("Floatlist\n----------\n");
 		floatlist fl;	// creating an object of floatlist.
@@ -93,6 +98,15 @@ int main()
 			printf("%0.2f\t", next(&it));
 		}
 		printf("\n");
+
+		gl_iterator(float) *beg = gl_begin(&fl);
+		gl_iterator(float) *end = gl_end(&fl);
+
+		myfind(beg, end, 4.55);
+		if(!gl_iterator_eq(beg, end))
+			printf("\n%0.2f: Found\n", get_val(beg));
+		else
+			printf("\nNot Found\n");
 
 		gl_clear(&fl);
 		printf("\nAfter clearing the list:\n");
