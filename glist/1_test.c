@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "glist.h"
 
+// Generic find function
 #define myfind(first, last, key)\
 { \
 	while(!gl_iterator_eq(first, last) && (get_val(first) != key)) \
@@ -37,23 +38,17 @@ int main()
 			printf("%d ", next(&it));
 		}
 
-		gl_iterator(int) *it2 = gl_find(il, 4);
-		if(has_next_int(it2))
-			printf("\n%d: Found\n", next_int(it2));
-		else
-			printf("\n2: Not found\n");
-
 		gl_iterator(int) *beg = gl_begin(il);
 		gl_iterator(int) *end = gl_end(il);
 
-		myfind(beg, end, 20);
+		myfind(beg, end, 2);	//	using the generic find function
 		if(!gl_iterator_eq(beg, end))
 			printf("\n%d: Found", get_val(beg));
 		else
 			printf("Not Found");
 	}
 
-	printf("\n---------------------------------------------\n");
+	printf("\n\n=============================================\n\n");
 	#if 1
 	{
 		printf("Floatlist\n----------\n");
@@ -81,6 +76,7 @@ int main()
 			printf("%0.2f\t", next_float(&it));
 		}
 		
+		
 		gl_sort(&fl);	// sorting the elements of the container in ascending order.
 		printf("\n\nAfter sorting:\n");
 		gl_init_iterator(float, &fl, &it);	// Re initialising the iterator to point to the beginning of container fl.
@@ -89,6 +85,7 @@ int main()
 			printf("%0.2f\t", next(&it));
 		}
 		printf("\n");
+
 
 		gl_unique(&fl);
 		printf("\nAfter removing duplicates using gl_unique:\n");
@@ -99,6 +96,7 @@ int main()
 		}
 		printf("\n");
 
+
 		gl_iterator(float) *beg = gl_begin(&fl);
 		gl_iterator(float) *end = gl_end(&fl);
 
@@ -108,6 +106,7 @@ int main()
 		else
 			printf("\nNot Found\n");
 
+		
 		gl_clear(&fl);
 		printf("\nAfter clearing the list:\n");
 		printf("Size: %ld\n", gl_size(&fl));
