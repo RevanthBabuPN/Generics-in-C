@@ -60,6 +60,24 @@ The internal implementation uses a singly linked list.<br>
 		<tr>
 			<td>gl_sort</td>
 			<td>sorts the elements (uses merge sort)</td>
+		</tr>
+		<tr>
+			<td>gl_iterator</td>
+			<td>iterator for given type</td>
+		</tr>
+			<td>gl_init_iterator</td>
+			<td>initialise the iterator to given list</td>
+		</tr>
+			<td>gl_iterator_eq</td>
+			<td>compare two iterators</td>
+		</tr>
+		<tr>
+			<td>gl_begin</td>
+			<td>iterator to the beginning of container</td>
+		</tr>
+		<tr>
+			<td>gl_end</td>
+			<td>iterator to one past the end of container</td>
 		</tr>	
 	</table>
 </div>
