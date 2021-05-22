@@ -104,12 +104,12 @@ int main()
 
 	gl_sort(l);		// [1, 2, 3]
 
-	iterator(int) it;
-	init_iterator(int, one, &it);
+	gl_iterator(int) it;
+	gl_init_iterator(int, one, &it);
 	
-	while(has_next_int(&it))
+	while(has_next(&it))
 	{
-		printf("%d ", next_int(&it));	// 1 2 3
+		printf("%d ", next(&it));	// 1 2 3
 	}
 }
 ```
